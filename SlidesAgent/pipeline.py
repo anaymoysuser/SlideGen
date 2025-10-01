@@ -82,7 +82,7 @@ from pptx import Presentation
   
 
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser(description='Poster Generation Pipeline')
+    parser = argparse.ArgumentParser(description='slides Generation Pipeline')
     parser.add_argument('--paper_path', type=str)
     parser.add_argument('--model_name_t', type=str, default='4o')
     parser.add_argument('--model_name_v', type=str, default='4o')

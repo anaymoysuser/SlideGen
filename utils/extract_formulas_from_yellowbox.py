@@ -69,9 +69,9 @@ def extract_formulas_from_yellowbox(pdf_path, page_img_folder ,formula_output_fo
   
 
 if __name__ == '__main__':
-    pdf_path = "assets/poster_data/STEP A General and Scalable Framework for Solving Video Inverse Problems/STEP A General and Scalable Framework for Solving Video Inverse Problems.pdf"   
+    pdf_path = "assets/slides_data/STEP A General and Scalable Framework for Solving Video Inverse Problems/STEP A General and Scalable Framework for Solving Video Inverse Problems.pdf"   
     page_img_folder = "<4o_4o>_images_and_tables/STEP_A_General_and_Scalable_Framework_for_Solving_Video_Inverse_Problems"
-    pdf_path="assets/poster_data/Vision as LoRA/Vision as LoRA.pdf"
+    pdf_path="assets/slides_data/Vision as LoRA/Vision as LoRA.pdf"
     page_img_folder = "<4o_4o>_images_and_tables/Vision as LoRA" 
     pdf_name = Path(pdf_path).stem
     print(pdf_name) 

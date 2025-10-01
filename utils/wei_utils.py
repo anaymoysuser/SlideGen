@@ -308,7 +308,7 @@ def run_modular(all_code, file_name, with_border=True, with_label=True):
         concatenated_code += add_border_function
         concatenated_code += save_helper_info_border.format(file_name, file_name)
     else:
-        concatenated_code += f'\nposter.save("{file_name}")'
+        concatenated_code += f'\nslides.save("{file_name}")'
     output, error = run_code(concatenated_code)
     return concatenated_code, output, error
 
@@ -373,9 +373,9 @@ def edit_modular(
         if attempt < num_retries:
             print(f"Retrying... Attempt {attempt + 1} of {num_retries}")
             msg = error
-            msg += '\nFix your code and try again. The poster is a single-page pptx.'
+            msg += '\nFix your code and try again. The slides is a single-page pptx.'
             if prompt_type != 'initial':
-                msg += '\nAssume that you have had a Presentation object named "poster" and a slide named "slide".'
+                msg += '\nAssume that you have had a Presentation object named "slides" and a slide named "slide".'
 
     return log
 
@@ -582,9 +582,9 @@ def gen_layout_parallel(agent, prompt, num_retries, existing_code='', slide_widt
         existing_code = utils_functions
         
     existing_code += f'''
-poster = create_poster(width_inch={slide_width}, height_inch={slide_height})
-slide = add_blank_slide(poster)
-save_presentation(poster, file_name="poster_{tmp_name}.pptx")
+slides = create_slides(width_inch={slide_width}, height_inch={slide_height})
+slide = add_blank_slide(slides)
+save_presentation(slides, file_name="slides_{tmp_name}.pptx")
 '''
     agent.reset()
     log = []
@@ -704,57 +704,7 @@ def check_bounding_boxes(bboxes, overall_width, overall_height):
     # 3) If nothing is wrong, return empty tuple
     return ()
 
-
-def is_poster_filled(
-    bounding_boxes: dict,
-    overall_width: float,
-    overall_height: float,
-    max_lr_margin: float,
-    max_tb_margin: float
-) -> bool:
-    """
-    Given a dictionary of bounding boxes (keys are box names and
-    values are dicts with float keys: "left", "top", "width", "height"),
-    along with the overall dimensions of the poster and maximum allowed
-    margins, this function determines whether the boxes collectively
-    fill the poster within those margin constraints.
-
-    :param bounding_boxes: Dictionary of bounding boxes of the form:
-                          {
-                              "box1": {"left": float, "top": float, "width": float, "height": float},
-                              "box2": {...},
-                              ...
-                          }
-    :param overall_width: Total width of the poster
-    :param overall_height: Total height of the poster
-    :param max_lr_margin: Maximum allowed left and right margins
-    :param max_tb_margin: Maximum allowed top and bottom margins
-    :return: True if the bounding boxes fill the poster (with no big leftover spaces),
-             False otherwise.
-    """
-
-    # If there are no bounding boxes, we consider the poster unfilled.
-    if not bounding_boxes:
-        return False
-
-    # Extract the minimum left, maximum right, minimum top, and maximum bottom from all bounding boxes.
-    min_left = min(b["left"] for b in bounding_boxes.values())
-    max_right = max(b["left"] + b["width"] for b in bounding_boxes.values())
-    min_top = min(b["top"] for b in bounding_boxes.values())
-    max_bottom = max(b["top"] + b["height"] for b in bounding_boxes.values())
-
-    # Calculate leftover margins.
-    leftover_left = min_left
-    leftover_right = overall_width - max_right
-    leftover_top = min_top
-    leftover_bottom = overall_height - max_bottom
-
-    # Check if leftover margins exceed the allowed maxima.
-    if (leftover_left > max_lr_margin or leftover_right > max_lr_margin or
-        leftover_top > max_tb_margin or leftover_bottom > max_tb_margin):
-        return False
-
-    return True
+ 
 
 def check_and_fix_subsections(section, subsections):
     """
@@ -1342,44 +1292,4 @@ def get_img_ratio_in_section(content_json):
                 res[val['path']] = get_img_ratio(val['path'])
 
     return res
-
-
-def get_snapshot_from_section(leaf_section, section_name, name_to_hierarchy, leaf_name, section_code, empty_paper_path='poster.pptx'):
-    hierarchy = name_to_hierarchy[leaf_name]
-    hierarchy_overflow_name = f'tmp/overflow_check_<{section_name}>_<{leaf_section}>_hierarchy_{hierarchy}'
-    run_code_with_utils(section_code, utils_functions)
-    poster = Presentation(empty_paper_path)
-    # add border regardless of the hierarchy
-    curr_location = add_border_hierarchy(
-        poster, 
-        name_to_hierarchy, 
-        hierarchy, 
-        border_width=10,
-        # regardless=True
-    )
-    if not leaf_section in curr_location:
-        leaf_section = section_name
-    save_presentation(poster, file_name=f"{hierarchy_overflow_name}.pptx")
-    ppt_to_images(
-        f"{hierarchy_overflow_name}.pptx", 
-        hierarchy_overflow_name, 
-        dpi=200
-    )
-    poster_image_path = os.path.join(f"{hierarchy_overflow_name}", "slide_0001.jpg")
-    poster_image = Image.open(poster_image_path)
-
-    slides_width = emu_to_inches(poster.slide_width)
-    slides_height = emu_to_inches(poster.slide_height)
-    locations = convert_pptx_bboxes_json_to_image_json(
-        curr_location, 
-        slides_width, 
-        slides_height
-    )
-    zoomed_in_img = zoom_in_image_by_bbox(
-        poster_image, 
-        locations[leaf_name], 
-        padding=0.01
-    )
-    # save the zoomed_in_img
-    zoomed_in_img.save(f"{hierarchy_overflow_name}_zoomed_in.jpg")
-    return curr_location, zoomed_in_img, f"{hierarchy_overflow_name}_zoomed_in.jpg"
+ 

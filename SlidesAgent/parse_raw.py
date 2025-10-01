@@ -291,7 +291,7 @@ def parse_raw(args, actor_config, version=1):
         text_content, rendered = parse_pdf(raw_source, model_lst=parser_model, save_file=False)
 
     if version == 1:
-        template = Template(open("utils/prompts/gen_poster_raw_content.txt").read())
+        template = Template(open("utils/prompts/gen_raw_content.txt").read())
     elif version == 2:
         template = Template(open("utils/prompts/gen_slides_raw_content_v2.txt").read())
     use_gpt5_responses = False

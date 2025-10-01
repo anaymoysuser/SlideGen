@@ -1,1 +1,1 @@
-from . import poster_eval_utils, pptx_utils, wei_utils, critic_utils, ablation_utils, src, extract_formulas_from_yellowbox
+from . import slides_eval_utils, pptx_utils, wei_utils, critic_utils, ablation_utils, src, extract_formulas_from_yellowbox

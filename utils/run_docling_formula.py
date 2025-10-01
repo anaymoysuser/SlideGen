@@ -6,7 +6,7 @@ import os,   re
   
 from docling_core.types.doc.document import BoundingBox, CoordOrigin
  
-ROOT = "/home/ubuntu/yifan/eeg2fmri/Paper2PPTX"
+ROOT = "."
 if ROOT not in sys.path:
     sys.path.insert(0, ROOT)
 IMAGE_RESOLUTION_SCALE = 5
@@ -601,8 +601,7 @@ def main():
     formulas, label_counter, preview_samples = extract_formulas_and_stats(
         pdf_path, image_scale=args.image_scale
     )
-
-    # --- 打印统计 ---
+ 
     print("\nLabel distribution:")
     for k, v in label_counter.most_common():
         print(f"  {k}: {v}")
@@ -619,7 +618,7 @@ def main():
         with open(args.out, "w", encoding="utf-8") as f:
             json.dump(formulas, f, ensure_ascii=False, indent=2)
         print(f"\nSaved formulas to {args.out}")
-    # —— 调用示例 —— #
+ 
     converter = build_converter(image_scale=2.5)
     result = converter.convert(pdf_path)
     export_formulas_with_bbox_and_crops(
@@ -636,17 +635,17 @@ if __name__ == "__main__":
 
 '''
 CUDA_VISIBLE_DEVICES= \
-PYTHONPATH=/home/ubuntu/yifan/eeg2fmri/Paper2PPTX:$PYTHONPATH \
-python /home/ubuntu/yifan/eeg2fmri/Paper2PPTX/run_docling_formula.py \
-  --pdf "/home/ubuntu/yifan/eeg2fmri/Paper2PPTX/assets/poster_data/STEP A General and Scalable Framework for Solving Video Inverse Problems/STEP A General and Scalable Framework for Solving Video Inverse Problems.pdf" \
+PYTHONPATH=.:$PYTHONPATH \
+python ./run_docling_formula.py \
+  --pdf "./assets/slides_data/STEP A General and Scalable Framework for Solving Video Inverse Problems/STEP A General and Scalable Framework for Solving Video Inverse Problems.pdf" \
   --out formulas.json \
   --image-scale 2.5
 
 
 export  CUDA_VISIBLE_DEVICES=3 
-PYTHONPATH=/home/ubuntu/yifan/eeg2fmri/Paper2PPTX:$PYTHONPATH \
-python /home/ubuntu/yifan/eeg2fmri/Paper2PPTX/run_docling_formula.py \
-  --pdf "/home/ubuntu/yifan/eeg2fmri/Paper2PPTX/assets/poster_data/Vision as LoRA/2503.20680v1.pdf" \
+PYTHONPATH=.:$PYTHONPATH \
+python ./run_docling_formula.py \
+  --pdf "./assets/slides_data/Vision as LoRA/2503.20680v1.pdf" \
   --out formulas.json \
   --image-scale 1 
 

@@ -171,9 +171,9 @@ def ppt_to_images(file: str, output_dir: str, warning: bool = False, dpi=72, out
             images = convert_from_path(temp_pdf, dpi=72)
             for i, img in enumerate(images):
                 if output_type == 'png':
-                    img.save(pjoin(output_dir, f"poster.png"), 'PNG')
+                    img.save(pjoin(output_dir, f"slides.png"), 'PNG')
                 else:
-                    img.save(pjoin(output_dir, f"poster.jpg"), 'JPEG')
+                    img.save(pjoin(output_dir, f"slides.jpg"), 'JPEG')
             return
 
         raise RuntimeError("No PDF file was created in the temporary directory", file)
