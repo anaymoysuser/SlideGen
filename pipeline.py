@@ -192,7 +192,6 @@ if __name__ == '__main__':
         input_token, output_token  = generate_slide_plan(args)
         total_input_tokens_t += input_token
         total_output_tokens_t += output_token
- 
         end_time = time.time()
         time_taken = end_time - start_time
         print("time_taken:",time_taken)
